@@ -51,14 +51,14 @@ ApplicationWindow {
         
         Rectangle {
             id: workspace
-            implicitWidth: 900
+            implicitWidth: 800
             color: "transparent"
         
             Canvas {
                 id: mycanvas
                 anchors.centerIn: parent
-                width: 800
-                height: 800
+		width: 700
+		height: 700
                 onPaint: {
                     var ctx = getContext("2d");
                     ctx.fillStyle = "white"; 
