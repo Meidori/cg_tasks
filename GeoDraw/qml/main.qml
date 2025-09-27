@@ -38,19 +38,43 @@ ApplicationWindow {
                 anchors.centerIn: parent
 
                 Button {
+                    id: heightBtn
                     text: "Высота"
                     checkable: true
                     Layout.fillWidth: true
+                    onClicked: {
+                        if (checked) {
+                            medianBtn.checked = false
+                            bisectorBtn.checked = false
+                            canvasArea.requestPaint()
+                        }
+                    }
                 }
                 Button {
+                    id: medianBtn
                     text: "Медиана"
                     checkable: true
                     Layout.fillWidth: true
+                    onClicked: {
+                        if (checked) {
+                            heightBtn.checked = false
+                            bisectorBtn.checked = false
+                            canvasArea.requestPaint()
+                        }
+                    }
                 }
                 Button {
+                    id: bisectorBtn
                     text: "Биссектриса"
                     checkable: true
                     Layout.fillWidth: true
+                    onClicked: {
+                        if (checked) {
+                            heightBtn.checked = false
+                            medianBtn.checked = false
+                            canvasArea.requestPaint()
+                        }
+                    }
                 }
 
                 Button {
@@ -106,6 +130,15 @@ ApplicationWindow {
                         ctx.beginPath()
                         ctx.moveTo(pts.firstPoint.x, pts.firstPoint.y)
                         ctx.lineTo(pts.secondPoint.x, pts.secondPoint.y)
+                        ctx.stroke()
+                    }
+
+                    if (valid(pts.heightPoint) && heightBtn.checked) {
+                        dot(pts.heightPoint, 3)
+                        
+                        ctx.beginPath()
+                        ctx.moveTo(pts.thirdPoint.x, pts.thirdPoint.y)
+                        ctx.lineTo(pts.heightPoint.x, pts.heightPoint.y)
                         ctx.stroke()
                     }
                 }

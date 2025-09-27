@@ -25,6 +25,30 @@ void Points::setThirdPoint(const QVector3D& point)
 {
     if (m_thirdPoint == point) return;
     m_thirdPoint = point;
+    calcHeight();
+    emit pointsChanged();
+}
+
+void Points::calcHeight()
+{
+    double x1 = m_firstPoint.x();
+    double y1 = m_firstPoint.y();
+    double x2 = m_secondPoint.x();
+    double y2 = m_secondPoint.y();
+    double x3 = m_thirdPoint.x();
+    double y3 = m_thirdPoint.y();
+
+    if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
+
+    A1 = y1 - y2;
+    B1 = x2 - x1;
+    C1 = x1 * y2 - x2 * y1;
+
+    double x4 = (B1*B1*x3 - A1*B1*y3 - A1*C1) / (std::pow(A1, 2) + std::pow(B1, 2));
+    double y4 = (A1*A1*y3 - A1*B1*x3 - B1*C1) / (std::pow(A1, 2) + std::pow(B1, 2));
+
+    m_heightPoint = QVector3D(x4, y4, 1);
+
     emit pointsChanged();
 }
 
@@ -61,6 +85,9 @@ void Points::removeLastPoint()
     else if (pts == 3)
     {
         m_thirdPoint = QVector3D(NAN, NAN, NAN);
+        m_heightPoint = QVector3D(NAN, NAN, NAN);
+        m_medianPoint = QVector3D(NAN, NAN, NAN);
+        m_bisectorPoint = QVector3D(NAN, NAN, NAN);
         changed = true;
     }
 
@@ -72,5 +99,8 @@ void Points::removeAllPoints()
     m_firstPoint = QVector3D(NAN, NAN, NAN);
     m_secondPoint = QVector3D(NAN, NAN, NAN);
     m_thirdPoint = QVector3D(NAN, NAN, NAN);
+    m_heightPoint = QVector3D(NAN, NAN, NAN);
+    m_medianPoint = QVector3D(NAN, NAN, NAN);
+    m_bisectorPoint = QVector3D(NAN, NAN, NAN);
     emit pointsChanged();
 }
