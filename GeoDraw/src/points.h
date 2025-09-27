@@ -23,8 +23,8 @@ public:
     void setThirdPoint(const QVector3D& point);
 
     Q_INVOKABLE int pointsCount();
-
-    void removeLastPoint();
+    Q_INVOKABLE void removeLastPoint();
+    Q_INVOKABLE void removeAllPoints();
 
 signals:
     void pointsChanged();

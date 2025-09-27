@@ -67,3 +67,10 @@ void Points::removeLastPoint()
     if (changed) emit pointsChanged();
 }
 
+void Points::removeAllPoints()
+{
+    m_firstPoint = QVector3D(NAN, NAN, NAN);
+    m_secondPoint = QVector3D(NAN, NAN, NAN);
+    m_thirdPoint = QVector3D(NAN, NAN, NAN);
+    emit pointsChanged();
+}

@@ -11,6 +11,16 @@ ApplicationWindow {
     Universal.theme: Universal.Dark
     Universal.accent: Universal.Violet
 
+    Points {
+        id: pts
+    }
+
+    // update on points changed
+    Connections {
+        target: pts
+        function onPointsChanged() { canvasArea.requestPaint() }
+    }
+
     SplitView {
         anchors.fill: parent
         orientation: Qt.Horizontal
@@ -46,11 +56,17 @@ ApplicationWindow {
                 Button {
                     text: "Очистить"
                     Layout.fillWidth: true
+                    onClicked: {
+                        pts.removeAllPoints();
+                    }
                 }
 
                 Button {
                     text: "Удалить\nпоследнюю\nточку"
                     Layout.fillWidth: true
+                    onClicked: {
+                        pts.removeLastPoint();
+                    }
                 }
             }
         }
@@ -59,10 +75,6 @@ ApplicationWindow {
             id: workspace
             implicitWidth: 800
             color: "transparent"
-
-            Points {
-                id: pts
-            }
         
             Canvas {
                 id: canvasArea
@@ -96,12 +108,6 @@ ApplicationWindow {
                         ctx.lineTo(pts.secondPoint.x, pts.secondPoint.y)
                         ctx.stroke()
                     }
-                }
-
-                // update on points changed
-                Connections {
-                    target: pts
-                    function onPointsChanged() { canvasArea.requestPaint() }
                 }
 
                 // add points by mouse
