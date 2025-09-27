@@ -67,25 +67,3 @@ void Points::removeLastPoint()
     if (changed) emit pointsChanged();
 }
 
-void Points::draw(QPainter* painter)
-{
-    if (!painter) return;
-
-    int pts = pointsCount();
-    if (pts == 0) return;
-
-    if (pts >= 1) {
-        painter->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
-        painter->setBrush(QBrush(Qt::black, Qt::SolidPattern));
-        painter->drawEllipse(m_firstPoint.toPointF(), 3, 3);
-    }
-
-    if (pts >= 2) {
-        painter->drawEllipse(m_secondPoint.toPointF(), 3, 3);
-        painter->drawLine(m_firstPoint.toPointF(), m_secondPoint.toPointF());
-    }
-
-    if (pts >= 3) {
-        painter->drawEllipse(m_thirdPoint.toPointF(), 3, 3);
-    }
-}

@@ -26,8 +26,6 @@ public:
 
     void removeLastPoint();
 
-    void draw(QPainter* painter);
-
 signals:
     void pointsChanged();
 
