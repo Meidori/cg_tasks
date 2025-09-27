@@ -14,9 +14,11 @@ set(SOURCES
     resources.qrc
     
     src/main.cpp
+    src/points.cpp
 )
 
 set(HEADERS
+    src/points.h
 )
 
 add_executable(GeoDraw ${SOURCES} ${HEADERS})
