@@ -46,8 +46,8 @@ ApplicationWindow {
                         if (checked) {
                             medianBtn.checked = false
                             bisectorBtn.checked = false
-                            canvasArea.requestPaint()
                         }
+                        canvasArea.requestPaint()
                     }
                 }
                 Button {
@@ -59,8 +59,8 @@ ApplicationWindow {
                         if (checked) {
                             heightBtn.checked = false
                             bisectorBtn.checked = false
-                            canvasArea.requestPaint()
                         }
+                        canvasArea.requestPaint()
                     }
                 }
                 Button {
@@ -72,8 +72,8 @@ ApplicationWindow {
                         if (checked) {
                             heightBtn.checked = false
                             medianBtn.checked = false
-                            canvasArea.requestPaint()
                         }
+                        canvasArea.requestPaint()
                     }
                 }
 
@@ -141,6 +141,22 @@ ApplicationWindow {
                         ctx.lineTo(pts.heightPoint.x, pts.heightPoint.y)
                         ctx.stroke()
                     }
+
+                    if (valid(pts.medianPoint) && medianBtn.checked) {
+                        dot(pts.medianPoint, 3)
+                        
+                        ctx.beginPath()
+                        ctx.moveTo(pts.thirdPoint.x, pts.thirdPoint.y)
+                        ctx.lineTo(pts.medianPoint.x, pts.medianPoint.y)
+                        ctx.stroke()
+                    }
+
+                    if (bisectorBtn.checked) {
+                        ctx.beginPath()
+                        ctx.moveTo(pts.secondPoint.x, pts.secondPoint.y)
+                        ctx.lineTo(pts.thirdPoint.x, pts.thirdPoint.y)
+                        ctx.stroke()
+                    }
                 }
 
                 // add points by mouse
@@ -148,7 +164,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     acceptedButtons: Qt.LeftButton
                     onClicked: function(mouse) {
-                        const p = Qt.vector3d(mouse.x, mouse.y, 0)
+                        const p = Qt.vector3d(mouse.x, mouse.y, 1)
                         const n = pts.pointsCount()
                         if (n === 0)      pts.firstPoint  = p
                         else if (n === 1) pts.secondPoint = p

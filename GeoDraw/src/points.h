@@ -11,8 +11,8 @@ class Points : public QObject {
     Q_PROPERTY(QVector3D secondPoint READ secondPoint WRITE setSecondPoint NOTIFY pointsChanged)
     Q_PROPERTY(QVector3D thirdPoint READ thirdPoint WRITE setThirdPoint NOTIFY pointsChanged)
     Q_PROPERTY(QVector3D heightPoint READ heightPoint NOTIFY pointsChanged)
-    // Q_PROPERTY(QVector3D medianPoint READ medianPoint NOTIFY pointsChanged)
-    // Q_PROPERTY(QVector3D bisectorPoint READ bisectorPoint NOTIFY pointsChanged)
+    Q_PROPERTY(QVector3D medianPoint READ medianPoint NOTIFY pointsChanged)
+    Q_PROPERTY(QVector3D bisectorPoint READ bisectorPoint NOTIFY pointsChanged)
 
 public:
     Points(QObject* parent = nullptr);
@@ -33,6 +33,8 @@ public:
     Q_INVOKABLE void removeAllPoints();
 
     void calcHeight(); 
+    void calcMedian();
+    void calcBisector();
 
 signals:
     void pointsChanged();
@@ -41,10 +43,6 @@ private:
     QVector3D m_firstPoint;
     QVector3D m_secondPoint;
     QVector3D m_thirdPoint;
-
-    double A1;
-    double B1;
-    double C1;
     
     QVector3D m_heightPoint = QVector3D(NAN, NAN, NAN);
     QVector3D m_medianPoint = QVector3D(NAN, NAN, NAN);

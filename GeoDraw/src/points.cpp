@@ -26,6 +26,8 @@ void Points::setThirdPoint(const QVector3D& point)
     if (m_thirdPoint == point) return;
     m_thirdPoint = point;
     calcHeight();
+    calcMedian();
+    calcBisector();
     emit pointsChanged();
 }
 
@@ -40,9 +42,9 @@ void Points::calcHeight()
 
     if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
 
-    A1 = y1 - y2;
-    B1 = x2 - x1;
-    C1 = x1 * y2 - x2 * y1;
+    double A1 = y1 - y2;
+    double B1 = x2 - x1;
+    double C1 = x1 * y2 - x2 * y1;
 
     double x4 = (B1*B1*x3 - A1*B1*y3 - A1*C1) / (std::pow(A1, 2) + std::pow(B1, 2));
     double y4 = (A1*A1*y3 - A1*B1*x3 - B1*C1) / (std::pow(A1, 2) + std::pow(B1, 2));
@@ -51,6 +53,31 @@ void Points::calcHeight()
 
     emit pointsChanged();
 }
+
+void Points::calcMedian()
+{
+    double x1 = m_firstPoint.x();
+    double y1 = m_firstPoint.y();
+    double x2 = m_secondPoint.x();
+    double y2 = m_secondPoint.y();
+    double x3 = m_thirdPoint.x();
+    double y3 = m_thirdPoint.y();
+
+    if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
+
+    double x4 = (x1 + x2) / 2.0;
+    double y4 = (y1 + y2) / 2.0;
+
+    m_medianPoint = QVector3D(x4, y4, 1);
+
+    emit pointsChanged();
+}
+
+void Points::calcBisector()
+{
+    
+}
+
 
 int Points::pointsCount()
 {
