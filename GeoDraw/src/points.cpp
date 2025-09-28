@@ -65,19 +65,41 @@ void Points::calcMedian()
 
     if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
 
-    double x4 = (x1 + x2) / 2.0;
-    double y4 = (y1 + y2) / 2.0;
+    double A1 = y2 - y1;
+    double B1 = x1 - x2;
+    double C1 = x2 * y1 - x1 * y2;
+
+    double mid_x = (x1 + x2) / 2.0;
+    double mid_y = (y1 + y2) / 2.0;
+    
+    double A2 = mid_y - y3;
+    double B2 = x3 - mid_x;
+    double C2 = mid_x * y3 - x3 * mid_y;
+
+    double determinant = A1 * B2 - A2 * B1;
+    
+    if (fabs(determinant) < 1e-10) return;
+    
+    double x4 = (B1 * C2 - B2 * C1) / determinant;
+    double y4 = (A2 * C1 - A1 * C2) / determinant;
 
     m_medianPoint = QVector3D(x4, y4, 1);
-
     emit pointsChanged();
 }
 
 void Points::calcBisector()
 {
-    
-}
+    double x1 = m_firstPoint.x();
+    double y1 = m_firstPoint.y();
+    double x2 = m_secondPoint.x();
+    double y2 = m_secondPoint.y();
+    double x3 = m_thirdPoint.x();
+    double y3 = m_thirdPoint.y();
 
+    if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
+
+
+}
 
 int Points::pointsCount()
 {

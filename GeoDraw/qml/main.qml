@@ -151,7 +151,7 @@ ApplicationWindow {
                         ctx.stroke()
                     }
 
-                    if (bisectorBtn.checked) {
+                    if (valid(pts.bisectorPoint) && bisectorBtn.checked) {
                         ctx.beginPath()
                         ctx.moveTo(pts.secondPoint.x, pts.secondPoint.y)
                         ctx.lineTo(pts.thirdPoint.x, pts.thirdPoint.y)
