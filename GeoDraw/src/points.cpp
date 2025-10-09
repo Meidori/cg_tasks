@@ -1,4 +1,5 @@
 #include "points.h"
+#include <QDebug>
 
 Points::Points(QObject* parent)
     : QObject(parent), 
@@ -42,12 +43,16 @@ void Points::calcHeight()
 
     if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
 
-    double A1 = y1 - y2;
-    double B1 = x2 - x1;
-    double C1 = x1 * y2 - x2 * y1;
+    m_A1 = y1 - y2;
+    m_B1 = x2 - x1;
+    m_C1 = x1 * y2 - x2 * y1;
 
-    double x4 = (B1*B1*x3 - A1*B1*y3 - A1*C1) / (std::pow(A1, 2) + std::pow(B1, 2));
-    double y4 = (A1*A1*y3 - A1*B1*x3 - B1*C1) / (std::pow(A1, 2) + std::pow(B1, 2));
+    double x4 = (m_B1*m_B1*x3 - m_A1*m_B1*y3 - m_A1*m_C1) / (std::pow(m_A1, 2) + std::pow(m_B1, 2));
+    double y4 = (m_A1*m_A1*y3 - m_A1*m_B1*x3 - m_B1*m_C1) / (std::pow(m_A1, 2) + std::pow(m_B1, 2));
+
+    m_Ah = y2 - y4;
+    m_Bh = x4 - x2;
+    m_Ch = x2 * y4 - x4 * y2;
 
     m_heightPoint = QVector3D(x4, y4, 1);
 
@@ -65,23 +70,23 @@ void Points::calcMedian()
 
     if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
 
-    double A1 = y2 - y1;
-    double B1 = x1 - x2;
-    double C1 = x2 * y1 - x1 * y2;
+    m_A1 = y2 - y1;
+    m_B1 = x1 - x2;
+    m_C1 = x2 * y1 - x1 * y2;
 
     double mid_x = (x1 + x2) / 2.0;
     double mid_y = (y1 + y2) / 2.0;
     
-    double A2 = mid_y - y3;
-    double B2 = x3 - mid_x;
-    double C2 = mid_x * y3 - x3 * mid_y;
+    m_Am = mid_y - y3;
+    m_Bm = x3 - mid_x;
+    m_Cm = mid_x * y3 - x3 * mid_y;
 
-    double determinant = A1 * B2 - A2 * B1;
+    double determinant = m_A1 * m_Bm - m_Am * m_B1;
     
     if (fabs(determinant) < 1e-10) return;
     
-    double x4 = (B1 * C2 - B2 * C1) / determinant;
-    double y4 = (A2 * C1 - A1 * C2) / determinant;
+    double x4 = (m_B1 * m_Cm - m_Bm * m_C1) / determinant;
+    double y4 = (m_Am * m_C1 - m_A1 * m_Cm) / determinant;
 
     m_medianPoint = QVector3D(x4, y4, 1);
     emit pointsChanged();
@@ -98,7 +103,27 @@ void Points::calcBisector()
 
     if ((x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1)) return;
 
+    m_A1 = y2 - y1;
+    m_B1 = x1 - x2;
+    m_C1 = x2 * y1 - x1 * y2;
 
+    m_A2 = y3 - y2;
+    m_B2 = x2 - x3;
+    m_C2 = x3 * y2 - x2 * y3; 
+
+    double d1 = std::sqrt(std::pow(x2 - x3, 2) + std::pow(y2 - y3, 2));  // distance 2 - 3
+    double d2 = std::sqrt(std::pow(x1 - x2, 2) + std::pow(y1 - y2, 2));  // distance 2 - 1
+
+    double x_bisector = (d1 * x1 + d2 * x3) / (d1 + d2);
+    double y_bisector = (d1 * y1 + d2 * y3) / (d1 + d2);
+
+    m_bisectorPoint = QVector3D(x_bisector, y_bisector, 1);
+
+    m_Ab = y_bisector - y2;
+    m_Bb = x2 - x_bisector;
+    m_Cb = x_bisector * y2 - x2 * y_bisector;
+        
+    emit pointsChanged();
 }
 
 int Points::pointsCount()
@@ -137,6 +162,14 @@ void Points::removeLastPoint()
         m_heightPoint = QVector3D(NAN, NAN, NAN);
         m_medianPoint = QVector3D(NAN, NAN, NAN);
         m_bisectorPoint = QVector3D(NAN, NAN, NAN);
+
+        m_A1 = NAN; m_B1 = 0; m_C1 = 0;
+        m_A2 = NAN; m_B2 = 0; m_C2 = 0;
+
+        m_Ah = NAN; m_Bh = 0; m_Ch = 0;
+        m_Am = NAN; m_Bm = 0; m_Cm = 0;
+        m_Ab = NAN; m_Bb = 0; m_Cb = 0;
+
         changed = true;
     }
 
@@ -151,5 +184,13 @@ void Points::removeAllPoints()
     m_heightPoint = QVector3D(NAN, NAN, NAN);
     m_medianPoint = QVector3D(NAN, NAN, NAN);
     m_bisectorPoint = QVector3D(NAN, NAN, NAN);
+    
+    m_A1 = NAN; m_B1 = 0; m_C1 = 0;
+    m_A2 = NAN; m_B2 = 0; m_C2 = 0;
+
+    m_Ah = NAN; m_Bh = 0; m_Ch = 0;
+    m_Am = NAN; m_Bm = 0; m_Cm = 0;
+    m_Ab = NAN; m_Bb = 0; m_Cb = 0;
+    
     emit pointsChanged();
 }

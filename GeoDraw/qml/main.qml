@@ -156,6 +156,13 @@ ApplicationWindow {
                         ctx.moveTo(pts.secondPoint.x, pts.secondPoint.y)
                         ctx.lineTo(pts.thirdPoint.x, pts.thirdPoint.y)
                         ctx.stroke()
+
+                        dot(pts.bisectorPoint, 3)
+
+                        ctx.beginPath()
+                        ctx.moveTo(pts.bisectorPoint.x, pts.bisectorPoint.y)
+                        ctx.lineTo(pts.secondPoint.x, pts.secondPoint.y)
+                        ctx.stroke()
                     }
                 }
 
@@ -181,6 +188,61 @@ ApplicationWindow {
             id: statusBar
             implicitWidth: 200
             color: "transparent"
+
+            Column {
+                anchors.fill: parent
+                spacing: 2
+
+                function valid(p) { return !(isNaN(p.x) || isNaN(p.y)) }
+                
+                Label {
+                    text: parent.valid(pts.firstPoint) 
+                    ? "Точка 1: " + pts.firstPoint.x + "; " + pts.firstPoint.y
+                    : ""
+                }
+
+                Label {
+                    text: parent.valid(pts.secondPoint) 
+                    ? "Точка 2: " + pts.secondPoint.x + "; " + pts.secondPoint.y
+                    : ""
+                }
+
+                Label {
+                    text: parent.valid(pts.thirdPoint) 
+                    ? "Точка 3: " + pts.thirdPoint.x + "; " + pts.thirdPoint.y
+                    : ""
+                }
+
+                Label {
+                    text: (parent.valid(pts.thirdPoint) && !(isNaN(pts.A1))) 
+                    ? "Уравнение прямой: " + pts.A1 + "x + " + pts.B1 + "y + " + pts.C1 + " = 0"
+                    : ""
+                }
+
+                Label {
+                    text: (parent.valid(pts.thirdPoint) && !(isNaN(pts.A2)) && bisectorBtn.checked) 
+                    ? "Уравнение прямой: " + pts.A2 + "x + " + pts.B2 + "y + " + pts.C2 + " = 0"
+                    : ""
+                }
+
+                Label {
+                    text: (parent.valid(pts.thirdPoint) && !(isNaN(pts.Ah)) && heightBtn.checked) 
+                    ? "Уравнение высоты: " + pts.Ah + "x + " + pts.Bh + "y + " + pts.Ch + " = 0"
+                    : ""
+                }
+
+                Label {
+                    text: (parent.valid(pts.thirdPoint) && !(isNaN(pts.Am)) && medianBtn.checked) 
+                    ? "Уравнение медианы: " + pts.Am + "x + " + pts.Bm + "y + " + pts.Cm + " = 0"
+                    : ""
+                }
+
+                Label {
+                    text: (parent.valid(pts.thirdPoint) && !(isNaN(pts.Ab)) && bisectorBtn.checked) 
+                    ? "Уравнение биссектрисы: " + pts.Ab + "x + " + pts.Bb + "y + " + pts.Cb + " = 0"
+                    : ""
+                }
+            }
         }
     }
 }
